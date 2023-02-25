@@ -2,30 +2,30 @@ package org.vitrine.core;
 
 import processing.core.PApplet;
 
-import org.openkinect.processing.*;
+import java.lang.reflect.Constructor;
 
-public class Main extends PApplet {
-
-    private Kinect2 kinect;
-
-    public void setup() {
-        if (Config.isKinnectInstalled()) {
-            kinect = new Kinect2(this);
-            kinect.init();
-        }
-    }
-
-    public void settings() {
-        size(200, 200);
-    }
-
-    public void draw() {
-        background(0);
-        ellipse(mouseX, mouseY, 20, 20);
-    }
+public class Main {
 
     public static void main(String... args) {
         Config.loadConfig();
-        PApplet.main("org.vitrine.core.Main");
+        Main.loadSketch("examples.koch.Koch");
+    }
+
+    /**
+     * Load a sketch
+     * @param sketchName Reference of the sketch class
+     */
+    private static void loadSketch(String sketchName) {
+        String completeSketchReference = "org.vitrine.sketchs." + sketchName;
+
+        try {
+            Class<?> c = Class.forName(completeSketchReference);
+            Constructor<?> cons = c.getConstructor();
+            PApplet sketch = (PApplet) cons.newInstance();
+
+            PApplet.runSketch(new String[]{sketch.getClass().getSimpleName()}, sketch);
+        } catch (Exception e) {
+            throw new RuntimeException(e.toString());
+        }
     }
 }
