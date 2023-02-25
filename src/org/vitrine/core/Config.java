@@ -9,6 +9,9 @@ public class Config {
     @Getter
     private static boolean kinnectInstalled;
 
+    /**
+     * Load the configuration file
+     */
     public static void loadConfig() {
         XMLConfiguration config;
 
