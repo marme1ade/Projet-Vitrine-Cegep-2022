@@ -1,6 +1,6 @@
 package org.vitrine.sketchs.examples.koch;
 
-import processing.core.PApplet;
+import org.vitrine.core.Sketch;
 
 /**
  * Koch Curve
@@ -10,7 +10,7 @@ import processing.core.PApplet;
  * Each recursive level is drawn in sequence.
  */
 
-public class Koch extends PApplet {
+public class Koch extends Sketch {
 
     KochFractal k;
 
