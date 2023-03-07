@@ -7,7 +7,7 @@ import org.apache.commons.configuration.XMLConfiguration;
 
 public class Config {
     @Getter
-    private static boolean kinnectInstalled;
+    private static boolean kinectInstalled;
 
     /**
      * Load the configuration file
@@ -21,6 +21,8 @@ public class Config {
             throw new RuntimeException(e.toString());
         }
 
-        kinnectInstalled = config.getBoolean("Sensors.kinnectInstalled", false);
+        kinectInstalled = config.getBoolean("Sensors.kinectInstalled", false);
+
+
     }
 }
