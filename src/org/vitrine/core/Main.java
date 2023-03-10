@@ -1,14 +1,49 @@
 package org.vitrine.core;
 
+import io.github.classgraph.ClassGraph;
+import io.github.classgraph.ClassInfo;
+import io.github.classgraph.ScanResult;
+import org.vitrine.core.api.Server;
 import processing.core.PApplet;
 
+import java.io.IOException;
 import java.lang.reflect.Constructor;
+import java.net.ServerSocket;
+
+import org.vitrine.core.Console.Color;
 
 public class Main {
+    private static boolean isRunning = true;
+    private static final java.io.Console systemConsole = System.console();
+    private static Sketch currentSketch = null;
+    private static Server apiServer;
 
     public static void main(String... args) {
+        Console.println("- Chargement du fichier de configuration", Color.YELLOW);
         Config.loadConfig();
+        Console.println("- Chargement du fichier de configuration terminé", Color.GREEN);
+        Console.println("- Chargement du sketch", Color.YELLOW);
         Main.loadSketch("examples.koch.Koch");
+        Console.println("- Sketch démarré ", Color.GREEN);
+
+        Console.println("- Lancement du serveur API", Color.YELLOW);
+        apiServer = new Server(Config.getApiServerPort());
+        apiServer.start();
+        Console.println("- Serveur API lancé sur le port " + Config.getApiServerPort(), Color.GREEN);
+
+
+        if (systemConsole != null) {
+            Console.println("Lecture de commande en cours, entrer HELP pour la liste des commandes", Color.CYAN);
+            while (isRunning) {
+                    executeCommand(systemConsole.readLine());
+            }
+
+            Console.println("Fin du programme", Color.RED);
+
+            currentSketch.exit();
+        } else { // No system console, app is running on an IDE
+            Console.println("L'application a été démarrée dans un IDE, la lecture de commandes est désactivée.", Color.MAGENTA);
+        }
     }
 
     /**
@@ -21,9 +56,87 @@ public class Main {
         try {
             Class<?> c = Class.forName(completeSketchReference);
             Constructor<?> cons = c.getConstructor();
-            PApplet sketch = (PApplet) cons.newInstance();
+            Sketch sketch = (Sketch) cons.newInstance();
 
             PApplet.runSketch(new String[]{sketch.getClass().getSimpleName()}, sketch);
+
+            currentSketch = sketch;
+
+        } catch (Exception e) {
+            throw new RuntimeException(e.toString());
+        }
+    }
+
+    /**
+     * Execute a command from the console
+     * @param commandStr Command string
+     */
+    private static void executeCommand(String commandStr) {
+        String[] args = commandStr.split(" "); // Arguments / parameters are seperated by space
+        String command = args[0]; // argument 0 is the command
+
+        switch (command.toLowerCase()) {
+            case "exit":
+                isRunning = false;
+                break;
+            case "help":
+            case "?":
+                Console.println("[Liste des commandes]", Color.GREEN);
+                Console.println("list - Affiche la liste des sketchs disponible", Color.MAGENTA);
+                Console.println("load (nom du sketch) - Remplace le sketch actuel", Color.MAGENTA);
+                Console.println("stop - Arrête le sketch actuel, mais ne ferme pas l'application", Color.MAGENTA);
+                Console.println("exit - Ferme l'application", Color.MAGENTA);
+                Console.println("clear - Nettoyer la console", Color.MAGENTA);
+                Console.println("help / ? - Affiche la liste des commandes", Color.MAGENTA);
+                Console.println("[Fin liste des commandes]", Color.GREEN);
+                break;
+            case "load":
+                if (args.length < 2) {
+                    Console.println("Veuillez spécifier le nom du sketch", Color.MAGENTA);
+                    break;
+                }
+
+                if (currentSketch != null) {
+                    currentSketch.close();
+                }
+
+                try {
+                    loadSketch(args[1]);
+                    Console.println("- Sketch démarré ", Color.GREEN);
+                } catch (RuntimeException e) {
+                    Console.println("Une erreur s'est produite lors du chargement du sketch, veuillez vérifier le nom", Color.RED);
+                }
+                break;
+            case "stop":
+                if (currentSketch != null) currentSketch.close();
+                break;
+            case "list":
+                list();
+                break;
+            case "cls":
+            case "clear":
+                Console.clear();
+                break;
+            default:
+                Console.println("Cette commande n'existe pas !", Color.MAGENTA);
+                break;
+        }
+    }
+
+    /**
+     * Display all the sketchs
+     */
+    private static void list() {
+        try (ScanResult scanResult = new ClassGraph().acceptPackages("org.vitrine")
+                .enableClassInfo().scan()) {
+
+            Console.println("List of sketchs:", Color.MAGENTA);
+
+            for (ClassInfo _class : scanResult.getAllClasses()) {
+                if (_class.extendsSuperclass(Sketch.class)) {
+                    Console.println(_class.getName().replace("org.vitrine.sketchs.", ""), Color.MAGENTA);
+                }
+            }
         } catch (Exception e) {
             throw new RuntimeException(e.toString());
         }

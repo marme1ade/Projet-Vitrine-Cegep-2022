@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 <config>
+    <Server>
+        <Api>
+            <port>2121</port>
+        </Api>
+    </Server>
+
     <Sensors>
         <kinnectInstalled>false</kinnectInstalled>
     </Sensors>
