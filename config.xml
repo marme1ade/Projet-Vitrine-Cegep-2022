@@ -7,6 +7,6 @@
     </Server>
 
     <Sensors>
-        <kinnectInstalled>false</kinnectInstalled>
+        <kinectInstalled>false</kinectInstalled>
     </Sensors>
 </config>
