@@ -8,6 +8,8 @@ import org.apache.commons.configuration.XMLConfiguration;
 public class Config {
     @Getter
     private static boolean kinectInstalled;
+    @Getter
+    private static int apiServerPort;
 
     /**
      * Load the configuration file
@@ -22,6 +24,7 @@ public class Config {
         }
 
         kinectInstalled = config.getBoolean("Sensors.kinectInstalled", false);
+        apiServerPort = config.getInt("Server.Api.port");
 
 
     }

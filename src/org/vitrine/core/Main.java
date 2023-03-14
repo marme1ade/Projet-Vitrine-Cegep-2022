@@ -3,9 +3,12 @@ package org.vitrine.core;
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ScanResult;
+import org.vitrine.core.api.Server;
 import processing.core.PApplet;
 
+import java.io.IOException;
 import java.lang.reflect.Constructor;
+import java.net.ServerSocket;
 
 import org.vitrine.core.Console.Color;
 
@@ -13,6 +16,7 @@ public class Main {
     private static boolean isRunning = true;
     private static final java.io.Console systemConsole = System.console();
     private static Sketch currentSketch = null;
+    private static Server apiServer;
 
     public static void main(String... args) {
         Console.println("- Chargement du fichier de configuration", Color.YELLOW);
@@ -21,6 +25,12 @@ public class Main {
         Console.println("- Chargement du sketch", Color.YELLOW);
         Main.loadSketch("examples.koch.Koch");
         Console.println("- Sketch démarré ", Color.GREEN);
+
+        Console.println("- Lancement du serveur API", Color.YELLOW);
+        apiServer = new Server(Config.getApiServerPort());
+        apiServer.start();
+        Console.println("- Serveur API lancé sur le port " + Config.getApiServerPort(), Color.GREEN);
+
 
         if (systemConsole != null) {
             Console.println("Lecture de commande en cours, entrer HELP pour la liste des commandes", Color.CYAN);
