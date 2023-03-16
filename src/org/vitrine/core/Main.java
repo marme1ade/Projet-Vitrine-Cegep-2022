@@ -6,9 +6,7 @@ import io.github.classgraph.ScanResult;
 import org.vitrine.core.api.Server;
 import processing.core.PApplet;
 
-import java.io.IOException;
 import java.lang.reflect.Constructor;
-import java.net.ServerSocket;
 
 import org.vitrine.core.Console.Color;
 
@@ -30,6 +28,7 @@ public class Main {
         apiServer = new Server(Config.getApiServerPort());
         apiServer.start();
         Console.println("- Serveur API lancé sur le port " + Config.getApiServerPort(), Color.GREEN);
+        PeriodicTasks.start();
 
 
         if (systemConsole != null) {

@@ -35,10 +35,7 @@ public class ClientHandler extends Thread {
             }
 
             Console.println(input, Console.Color.RED);
-            out.println(input);
-            /*
-            @TODO out.println(parseApi(input));
-             */
+            out.println(Parser.parseQuery(input));
         }
 
         try {
