@@ -3,6 +3,7 @@ package org.vitrine.core;
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ScanResult;
+import org.vitrine.common.Utils;
 import org.vitrine.core.api.Server;
 import processing.core.PApplet;
 
@@ -29,6 +30,8 @@ public class Main {
         apiServer.start();
         Console.println("- Serveur API lancé sur le port " + Config.getApiServerPort(), Color.GREEN);
         PeriodicTasks.start();
+
+        Utils.debugGenerateTotp();
 
 
         if (systemConsole != null) {
