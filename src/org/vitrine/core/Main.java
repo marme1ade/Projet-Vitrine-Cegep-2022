@@ -1,8 +1,6 @@
 package org.vitrine.core;
 
-import io.github.classgraph.ClassGraph;
-import io.github.classgraph.ClassInfo;
-import io.github.classgraph.ScanResult;
+import org.vitrine.common.Utils;
 import org.vitrine.core.api.Server;
 import processing.core.PApplet;
 
@@ -110,7 +108,10 @@ public class Main {
                 if (currentSketch != null) currentSketch.close();
                 break;
             case "list":
-                list();
+                Console.println("List of sketchs:", Console.Color.MAGENTA);
+                for (String sketch : Utils.getFractalsSketchList()) {
+                    Console.println(sketch, Console.Color.MAGENTA);
+                }
                 break;
             case "cls":
             case "clear":
@@ -122,22 +123,4 @@ public class Main {
         }
     }
 
-    /**
-     * Display all the sketchs
-     */
-    private static void list() {
-        try (ScanResult scanResult = new ClassGraph().acceptPackages("org.vitrine")
-                .enableClassInfo().scan()) {
-
-            Console.println("List of sketchs:", Color.MAGENTA);
-
-            for (ClassInfo _class : scanResult.getAllClasses()) {
-                if (_class.extendsSuperclass(Sketch.class)) {
-                    Console.println(_class.getName().replace("org.vitrine.sketchs.", ""), Color.MAGENTA);
-                }
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e.toString());
-        }
-    }
 }
