@@ -124,5 +124,3 @@ public class Utils {
         return fractals;
     }
 }
-
-}
