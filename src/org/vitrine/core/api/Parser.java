@@ -1,6 +1,7 @@
 package org.vitrine.core.api;
 
 import org.vitrine.common.Utils;
+import org.vitrine.core.Main;
 
 import java.io.IOException;
 
@@ -22,8 +23,21 @@ public class Parser {
                     response = executeCommand(queryData[1]) ? "OK" : "ERROR";
                 }
                 break;
-            case "LFRACTALS":
+            case "LFRACTALS": // Get the list of loaded fractals
                 response = "LFRACTALS|" + getFractalsListString();
+                break;
+            case "TVSTATUS": // Get if tv is ready or not
+                response = "TVSTATUS|" + (Main.tv.isInUse() ? 0 : 1); // 1 : ready
+                break;
+            case "TVCONNECT": // Create a new TV session if possible (TVCONNECT|code)
+                if (queryData.length == 2) {
+                    response = "TVCONNECT|" + Main.tv.connect(queryData[1]);
+                }
+                break;
+            case "TVSESSIONSTATUS": // Check and update TV session activity (TVSESSIONSTATUS|sessionId|sessionTotp)
+                if (queryData.length == 3) {
+                    response = "TVSESSIONSTATUS|" + (Main.tv.isTvSessionValid(queryData[1], queryData[2]) ? 1 : 0);
+                }
                 break;
             case "TEST": // Test api connection
                 response = "OK";

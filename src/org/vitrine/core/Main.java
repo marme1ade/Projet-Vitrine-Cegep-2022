@@ -2,6 +2,7 @@ package org.vitrine.core;
 
 import org.vitrine.common.Utils;
 import org.vitrine.core.api.Server;
+import org.vitrine.object.Television;
 import processing.core.PApplet;
 
 import java.lang.reflect.Constructor;
@@ -13,6 +14,7 @@ public class Main {
     private static final java.io.Console systemConsole = System.console();
     private static Sketch currentSketch = null;
     private static Server apiServer;
+    public static final Television tv = new Television();
 
     public static void main(String... args) {
         Console.println("- Chargement du fichier de configuration", Color.YELLOW);
@@ -40,7 +42,9 @@ public class Main {
             Console.println("L'application a été démarrée dans un IDE, la lecture de commandes est désactivée.", Color.MAGENTA);
         }
 
-        Utils.debugGenerateTotp();
+
+        tv.generateTotp(); // Generate initial Totp for TV
+
         PeriodicTasks.start();
         Console.println("- Tâches périodiques démarrée", Color.GREEN);
     }
