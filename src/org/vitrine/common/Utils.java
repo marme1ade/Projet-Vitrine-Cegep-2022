@@ -1,26 +1,18 @@
 package org.vitrine.common;
 
 import org.apache.commons.codec.binary.Base32;
-import org.apache.commons.codec.binary.Hex;
-import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.codec.digest.HmacAlgorithms;
-import org.apache.commons.codec.digest.HmacUtils;
 import org.vitrine.core.Console;
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 
 //Corrections
 import java.nio.ByteBuffer;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
-import java.util.Arrays;
-
 public class Utils {
 
     private static final int TOTP_TIME_STEP_SECONDS = 30;
     private static final int TOTP_NUMBER_OF_DIGITS = 6;
-    private static final int TOTP_VALIDATION_WINDOW = 1;
 
     public static boolean validateTotp(String secretKey, String code) {
         // Convert secretKey to Bytes

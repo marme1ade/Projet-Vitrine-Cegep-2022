@@ -14,6 +14,6 @@ public class PeriodicTasks {
             public void run() {
                 Utils.debugGenerateTotp();
             }
-        }, 30, 30, TimeUnit.MINUTES);
+        }, 30, 30, TimeUnit.SECONDS);
     }
 }
