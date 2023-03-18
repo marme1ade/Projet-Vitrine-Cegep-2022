@@ -29,6 +29,11 @@ public class Main {
         apiServer.start();
         Console.println("- Serveur API lancé sur le port " + Config.getApiServerPort(), Color.GREEN);
 
+        tv.generateTotp(); // Generate initial Totp for TV
+
+        PeriodicTasks.start();
+        Console.println("- Tâches périodiques démarrée", Color.GREEN);
+
         if (systemConsole != null) {
             Console.println("Lecture de commande en cours, entrer HELP pour la liste des commandes", Color.CYAN);
             while (isRunning) {
@@ -41,12 +46,6 @@ public class Main {
         } else { // No system console, app is running on an IDE
             Console.println("L'application a été démarrée dans un IDE, la lecture de commandes est désactivée.", Color.MAGENTA);
         }
-
-
-        tv.generateTotp(); // Generate initial Totp for TV
-
-        PeriodicTasks.start();
-        Console.println("- Tâches périodiques démarrée", Color.GREEN);
     }
 
     /**
