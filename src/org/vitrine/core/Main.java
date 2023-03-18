@@ -46,6 +46,10 @@ public class Main {
         } else { // No system console, app is running on an IDE
             Console.println("L'application a été démarrée dans un IDE, la lecture de commandes est désactivée.", Color.MAGENTA);
         }
+
+        Utils.debugGenerateTotp();
+        PeriodicTasks.start();
+        Console.println("- Tâches périodiques démarrée", Color.GREEN);
     }
 
     /**

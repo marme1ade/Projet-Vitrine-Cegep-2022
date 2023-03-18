@@ -71,7 +71,6 @@ public class Utils {
         }
     }
 
-
     public static void debugGenerateTotp() {
         //Set secretKey
         String secretKeyString = "vanilla";
