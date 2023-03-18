@@ -1,8 +1,6 @@
 package org.vitrine.core;
 
-import io.github.classgraph.ClassGraph;
-import io.github.classgraph.ClassInfo;
-import io.github.classgraph.ScanResult;
+import org.vitrine.common.Utils;
 import org.vitrine.core.api.Server;
 import processing.core.PApplet;
 
@@ -28,8 +26,6 @@ public class Main {
         apiServer = new Server(Config.getApiServerPort());
         apiServer.start();
         Console.println("- Serveur API lancé sur le port " + Config.getApiServerPort(), Color.GREEN);
-        PeriodicTasks.start();
-
 
         if (systemConsole != null) {
             Console.println("Lecture de commande en cours, entrer HELP pour la liste des commandes", Color.CYAN);
@@ -43,6 +39,10 @@ public class Main {
         } else { // No system console, app is running on an IDE
             Console.println("L'application a été démarrée dans un IDE, la lecture de commandes est désactivée.", Color.MAGENTA);
         }
+
+        Utils.debugGenerateTotp();
+        PeriodicTasks.start();
+        Console.println("- Tâches périodiques démarrée", Color.GREEN);
     }
 
     /**
@@ -110,7 +110,10 @@ public class Main {
                 if (currentSketch != null) currentSketch.close();
                 break;
             case "list":
-                list();
+                Console.println("List of sketchs:", Console.Color.MAGENTA);
+                for (String sketch : Utils.getFractalsSketchList()) {
+                    Console.println(sketch, Console.Color.MAGENTA);
+                }
                 break;
             case "cls":
             case "clear":
@@ -119,25 +122,6 @@ public class Main {
             default:
                 Console.println("Cette commande n'existe pas !", Color.MAGENTA);
                 break;
-        }
-    }
-
-    /**
-     * Display all the sketchs
-     */
-    private static void list() {
-        try (ScanResult scanResult = new ClassGraph().acceptPackages("org.vitrine")
-                .enableClassInfo().scan()) {
-
-            Console.println("List of sketchs:", Color.MAGENTA);
-
-            for (ClassInfo _class : scanResult.getAllClasses()) {
-                if (_class.extendsSuperclass(Sketch.class)) {
-                    Console.println(_class.getName().replace("org.vitrine.sketchs.", ""), Color.MAGENTA);
-                }
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e.toString());
         }
     }
 }
