@@ -1,5 +1,7 @@
 package org.vitrine.core;
 
+import org.vitrine.common.Utils;
+
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -24,6 +26,5 @@ public class PeriodicTasks {
                 Main.tv.generateTotp();
             }
         }, 30, 30, TimeUnit.SECONDS);
-
     }
 }
