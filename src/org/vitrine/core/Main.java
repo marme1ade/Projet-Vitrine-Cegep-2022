@@ -2,6 +2,7 @@ package org.vitrine.core;
 
 import org.vitrine.common.Utils;
 import org.vitrine.core.api.Server;
+import org.vitrine.object.Television;
 import processing.core.PApplet;
 
 import java.lang.reflect.Constructor;
@@ -13,6 +14,7 @@ public class Main {
     private static final java.io.Console systemConsole = System.console();
     private static Sketch currentSketch = null;
     private static Server apiServer;
+    public static final Television tv = new Television();
 
     public static void main(String... args) {
         Console.println("- Chargement du fichier de configuration", Color.YELLOW);
@@ -26,6 +28,11 @@ public class Main {
         apiServer = new Server(Config.getApiServerPort());
         apiServer.start();
         Console.println("- Serveur API lancé sur le port " + Config.getApiServerPort(), Color.GREEN);
+
+        tv.generateTotp(); // Generate initial Totp for TV
+
+        PeriodicTasks.start();
+        Console.println("- Tâches périodiques démarrée", Color.GREEN);
 
         if (systemConsole != null) {
             Console.println("Lecture de commande en cours, entrer HELP pour la liste des commandes", Color.CYAN);
@@ -49,8 +56,12 @@ public class Main {
      * Load a sketch
      * @param sketchName Reference of the sketch class
      */
-    private static void loadSketch(String sketchName) {
+    public static boolean loadSketch(String sketchName) {
         String completeSketchReference = "org.vitrine.sketchs." + sketchName;
+
+        if (currentSketch != null) {
+            currentSketch.close();
+        }
 
         try {
             Class<?> c = Class.forName(completeSketchReference);
@@ -60,9 +71,11 @@ public class Main {
             PApplet.runSketch(new String[]{sketch.getClass().getSimpleName()}, sketch);
 
             currentSketch = sketch;
+            return true;
 
         } catch (Exception e) {
-            throw new RuntimeException(e.toString());
+            Console.println(e.toString(), Color.RED);
+            return false;
         }
     }
 

@@ -19,7 +19,7 @@ import java.util.List;
 
 public class Utils {
 
-    private static final int TOTP_TIME_STEP_SECONDS = 30;
+    public static final int TOTP_TIME_STEP_SECONDS = 30;
     private static final int TOTP_NUMBER_OF_DIGITS = 6;
 
     public static boolean validateTotp(String secretKey, String code) {
@@ -37,7 +37,7 @@ public class Utils {
         return totp.equals(code);
     }
 
-    private static String generateTotp(byte[] secretKey, long timeSteps) {
+    public static String generateTotp(byte[] secretKey, long timeSteps) {
         try {
             // Convert the time steps to a byte array
             byte[] timeBytes = ByteBuffer.allocate(8).putLong(timeSteps).array();
@@ -108,6 +108,24 @@ public class Utils {
 
         return fractals;
     }
+
+    public static boolean FractalSketchExist(String sketchName) {
+        return getFractalsList().contains(sketchName);
+    }
+
+    public static String findCompleteSketchName(String partialName) {
+        String completeSketchName = "";
+
+        for (String sketch : getFractalsSketchList()) {
+            if (sketch.contains("." + partialName)) {
+                completeSketchName = sketch;
+                break;
+            }
+        }
+
+        return completeSketchName;
+    }
+
 
     /**
      * Get fractal list
