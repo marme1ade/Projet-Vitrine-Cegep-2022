@@ -52,8 +52,12 @@ public class Main {
      * Load a sketch
      * @param sketchName Reference of the sketch class
      */
-    private static void loadSketch(String sketchName) {
+    public static boolean loadSketch(String sketchName) {
         String completeSketchReference = "org.vitrine.sketchs." + sketchName;
+
+        if (currentSketch != null) {
+            currentSketch.close();
+        }
 
         try {
             Class<?> c = Class.forName(completeSketchReference);
@@ -63,9 +67,11 @@ public class Main {
             PApplet.runSketch(new String[]{sketch.getClass().getSimpleName()}, sketch);
 
             currentSketch = sketch;
+            return true;
 
         } catch (Exception e) {
-            throw new RuntimeException(e.toString());
+            Console.println(e.toString(), Color.RED);
+            return false;
         }
     }
 

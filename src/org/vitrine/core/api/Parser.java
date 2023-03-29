@@ -1,6 +1,7 @@
 package org.vitrine.core.api;
 
 import org.vitrine.common.Utils;
+import org.vitrine.core.Console;
 import org.vitrine.core.Main;
 
 import java.io.IOException;
@@ -37,6 +38,11 @@ public class Parser {
             case "TVSESSIONSTATUS": // Check and update TV session activity (TVSESSIONSTATUS|sessionId|sessionTotp)
                 if (queryData.length == 3) {
                     response = "TVSESSIONSTATUS|" + (Main.tv.isTvSessionValid(queryData[1], queryData[2]) ? 1 : 0);
+                }
+                break;
+            case "PLAYF":
+                if (queryData.length == 4) { // Play a sketch (PLAYF|sketchName|tvSessionId|tvSessionCode)
+                    response = "PLAYF|" + ((playFractalSketch(queryData[1], queryData[2], queryData[3])) ? 1 : 0);
                 }
                 break;
             case "TEST": // Test api connection
@@ -77,5 +83,25 @@ public class Parser {
         }
 
         return s.substring(0, s.length() - 1); // We remove the last ; separator from the string
+    }
+
+    private static boolean playFractalSketch(String sketchName, String tvSessionId, String tvSessionCode) {
+
+        if (!Main.tv.isTvSessionValid(tvSessionId, tvSessionCode)) {
+            return false;
+        }
+
+        if (!Utils.FractalSketchExist(sketchName)) {
+            return false;
+        }
+
+        String completeSketchName = Utils.findCompleteSketchName(sketchName);
+        if (completeSketchName.isEmpty()) {
+            Console.println("2", Console.Color.RED);
+           return false;
+        }
+
+        Console.println(completeSketchName, Console.Color.RED);
+        return Main.loadSketch(completeSketchName);
     }
 }
