@@ -48,8 +48,6 @@ public class Main {
         }
 
         Utils.debugGenerateTotp();
-        PeriodicTasks.start();
-        Console.println("- Tâches périodiques démarrée", Color.GREEN);
     }
 
     /**

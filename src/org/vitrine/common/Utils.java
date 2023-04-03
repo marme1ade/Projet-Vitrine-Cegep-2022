@@ -128,6 +128,34 @@ public class Utils {
 
 
     /**
+     * Verify if the requested sketch exist
+     * @param sketchName Requested sketch
+     * @return
+     */
+    public static boolean FractalSketchExist(String sketchName) {
+        return getFractalsList().contains(sketchName);
+    }
+
+    /**
+     * Get the complete sketch name with the partial name
+     * @param partialName
+     * @return
+     */
+    public static String findCompleteSketchName(String partialName) {
+        String completeSketchName = "";
+
+        for (String sketch : getFractalsSketchList()) {
+            if (sketch.contains("." + partialName)) {
+                completeSketchName = sketch;
+                break;
+            }
+        }
+
+        return completeSketchName;
+    }
+
+
+    /**
      * Get fractal list
      * @return Name of fractals
      */
