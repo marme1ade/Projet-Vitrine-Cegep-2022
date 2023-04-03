@@ -109,10 +109,20 @@ public class Utils {
         return fractals;
     }
 
+    /**
+     * Verify if the requested sketch exist
+     * @param sketchName Requested sketch
+     * @return
+     */
     public static boolean FractalSketchExist(String sketchName) {
         return getFractalsList().contains(sketchName);
     }
 
+    /**
+     * Get the complete sketch name with the partial name
+     * @param partialName
+     * @return
+     */
     public static String findCompleteSketchName(String partialName) {
         String completeSketchName = "";
 
